@@ -10,6 +10,10 @@
       <text class="cate-title">下划线输入框</text>
       <woex-textfield placeholder="我是个带下划线输入框" hasBorder=true></woex-textfield>
       <woex-textfield placeholder="我是个带下划线输入框" title="标题" hasBorder=true></woex-textfield>
+      <text class="cate-title">手机号输入框</text>
+      <woex-textfield placeholder="我是个手机号输入框" type="phone" hasBorder=true></woex-textfield>
+      <text class="cate-title">身份证输入框</text>
+      <woex-textfield placeholder="我是个身份证输入框" type="idCard" hasBorder=true></woex-textfield>
     </scroller>
   </div>
 </template>
