@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --progress",
     "watch": "webpack --progress --watch",
-    "serve": "anywhere -d build/example/ -p 8888",
+    "serve": "anywhere -d build/example/ -p 8800",
     "start": "npm run build && (npm run serve & npm run watch)"
   },
   "dependencies": {
@@ -64,6 +64,7 @@
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.9",
+    "velocity-animate": "^1.5.1",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",

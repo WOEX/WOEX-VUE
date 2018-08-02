@@ -1,8 +1,3 @@
-/**
- * CopyRight (C) 2017-2022 Alibaba Group Holding Limited.
- * Created by Tw93 on 17/09/25
- */
-
 import Utils from './packages/utils';
 import BindEnv from './packages/utils/bind-env';
 import WoexButton from './packages/woex-button';
@@ -17,6 +12,8 @@ import WoexRefresh from './packages/woex-refresh';
 import WoexTextfield from './packages/woex-textfield';
 import WoexLottie from './packages/woex-lottie';
 import WoexText from './packages/woex-text';
+import WoexDatepicker from './packages/woex-datepicker';
+import WoexLabel from './packages/woex-label';
 
 import WoexFetch from './packages/woex-fetch';
 
@@ -36,5 +33,7 @@ export {
   WoexRefresh,
   WoexTextfield,
   WoexLottie,
-  WoexText
+  WoexText,
+  WoexDatepicker,
+  WoexLabel
 };
