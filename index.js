@@ -14,6 +14,7 @@ import WoexLottie from './packages/woex-lottie';
 import WoexText from './packages/woex-text';
 import WoexDatepicker from './packages/woex-datepicker';
 import WoexLabel from './packages/woex-label';
+import WoexSwitcher from './packages/woex-switcher';
 
 import WoexFetch from './packages/woex-fetch';
 
@@ -35,5 +36,6 @@ export {
   WoexLottie,
   WoexText,
   WoexDatepicker,
-  WoexLabel
+  WoexLabel,
+  WoexSwitcher
 };
