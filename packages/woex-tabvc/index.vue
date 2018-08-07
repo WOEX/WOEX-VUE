@@ -31,9 +31,9 @@
 
 <script>
   import Utils from '../utils';
+  import UiUtils from '../utils/ui';
+  import Velocity from 'velocity-animate';
 
-  const dom = weex.requireModule('dom');
-  const animation = weex.requireModule('animation');
 
   export default {
     props: {
@@ -69,11 +69,7 @@
       duration: {
         type: [Number, String],
         default: 300
-      },
-      timingFunction: {
-        type: String,
-        default: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-      },
+      }
     },
     data: () => ({
       currentPage: 0,
@@ -89,7 +85,12 @@
     },
     methods:{
       setPage(page, url = null, animated = true){
+
         if (true === this.isMoving) {
+          return ;
+        }
+
+        if (page === this.currentPage) {
           return ;
         }
 
@@ -100,40 +101,34 @@
         this.previousPage = this.currentPage;
         const currentPageEl = this.$refs[`woex-tab-title-${page}`][0];
 
-        const appearNum = parseInt(750 / width);
+
+        const contentWidth = UiUtils.contentWidth();
+        const appearNum = parseInt(contentWidth / width);
         const tabsNum = this.tabTitles.length;
-        const offset = page > appearNum ? - (750 - width) / 2 : -width * 2;
+      if (appearNum < tabsNum) {
 
-        if (appearNum < tabsNum) {
-          (previousPage > appearNum || page > 1) && dom.scrollToElement(currentPageEl, {
-            offset, animated
-          });
-
-          page <= 1 && previousPage > page && dom.scrollToElement(currentPageEl, {
-            offset: -width * page,
-            animated
-          })
+          if (previousPage > appearNum || page > 1){
+            Velocity(currentPageEl, {offset: -width * page});
+          }else if (page <= 1 && previousPage > page) {
+            Velocity(currentPageEl, {offset: -width * page});
+          }
         }
 
-        this.isMoving = false;
         this.currentPage = page;
-        this._animateTransformX(page, animated);
+        this._animateTransformX(page, animated, ()=> { this.isMoving = false });
 
       },
-      _animateTransformX (page, animated) {
-        const {duration, timingFunction} = this;
+      _animateTransformX (page, animated, complete) {
+
+        const {duration} = this;
         const computedDur = animated ? duration : 0.00001;
         const containerEl = this.$refs[`tab-container`];
         const dist = page * 750;
-        animation.transition(containerEl, {
-          styles: {
-            transform: `translateX(${-dist}px)`
-          },
-          duration:computedDur,
-          timingFunction,
-          delay:0
-        }, () => {
-
+        Velocity(containerEl, {
+          translateX: UiUtils.canvas2rem(-dist)
+        },{
+          duration: computedDur,
+          complete: complete
         });
       }
     }
