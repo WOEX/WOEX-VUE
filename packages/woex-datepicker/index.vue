@@ -95,7 +95,8 @@
           currentSec: 0,
           recordStart: false,
           speedA: 5,
-          inertiaTimer: []
+          inertiaTimer: [],
+          offsetTimer:[]
         }
       },
       computed: {
@@ -124,16 +125,31 @@
         }
       },
       watch:{
-        selectOpts0: function (oldVal, newVal) {
+        selectOpts0: function (oldVal) {
 
-          this.reorderDates(0, newVal);
+          this.reorderDates(0, oldVal);
         },
-        selectOpts1: function (oldVal, newVal) {
+        selectOpts1: function (oldVal) {
 
-          this.reorderDates(1, newVal);
+          this.reorderDates(1, oldVal);
         },
-        selectOpts2: function (oldVal, newVal) {
-          this.reorderDates(2, newVal);
+        selectOpts2: function (oldVal) {
+          this.reorderDates(2, oldVal);
+        },
+        show: function(newVal) {
+          console.log(newVal);
+          for (let i =0 ; i < this.selectOptions.length; i++) {
+            if (newVal) {
+              this.autoAdjustPosition(i, false);
+            }else {
+              this.inertiaTimer[i] && clearInterval(this.inertiaTimer[i]);
+              this.offsetTimer[i] && clearInterval(this.offsetTimer[i]);
+            }
+          }
+
+          this.inertiaTimer = [];
+          this.offsetTimer = [];
+
         }
       },
       beforeMount: function () {
@@ -169,8 +185,6 @@
           }
           result.push(targetArr);
         }
-
-
 
         this.selectOptions = result;
       },
@@ -343,17 +357,20 @@
 
           if (animated) {
             let distance = 0;
-              const offsetTimer =  setInterval(() => {
+            if (this.offsetTimer[sec]) {
+              clearInterval(this.offsetTimer[sec]);
+            }
+               this.offsetTimer[sec] =  setInterval(() => {
                   distance++;
 
                 if (offset > 15) {
                   if (distance > 30 - offset) {
-                    clearInterval(offsetTimer);
+                    clearInterval(this.offsetTimer[sec]);
                   }
                     moveDeg += positive;
                 }else {
                   if (distance > offset) {
-                    clearInterval(offsetTimer);
+                    clearInterval(this.offsetTimer[sec]);
                   }
                     moveDeg -= positive;
                 }
