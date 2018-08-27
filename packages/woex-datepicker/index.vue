@@ -95,7 +95,7 @@
           currentSec: 0,
           recordStart: false,
           speedA: 5,
-          inertiaTimer: null
+          inertiaTimer: []
         }
       },
       computed: {
@@ -187,15 +187,33 @@
           this.$emit('woexCancel');
         },
         confirmEvent(){
-          this.$emit('woexConfirm');
+          const { type ,moveDeg0 , moveDeg1, moveDeg2, pickerOptions} = this;
+          if ('normal' === type) {
+            const absDeg0 = Math.abs(moveDeg0) + 2;
+            const absDeg1 = Math.abs(moveDeg1) + 2;
+            const absDeg2 = Math.abs(moveDeg2) + 2;
+            let index0 = (Math.floor(absDeg0 / 30)) % pickerOptions[0].length;
+            let index1 = (Math.floor(absDeg1 / 30)) % pickerOptions[1].length;
+            let index2 = (Math.floor(absDeg2 / 30)) % pickerOptions[2].length;
+
+            index0 = ( moveDeg0 >= 0 || 0 === index0 ) ? index0 : pickerOptions[0].length - index0;
+            index1 = ( moveDeg1 >= 0 || 0 === index1 ) ? index1 : pickerOptions[1].length - index1;
+            index2 = ( moveDeg2 >= 0 || 0 === index2 )? index2 : pickerOptions[2].length - index2;
+
+            const date = pickerOptions[0][index0] + '-' + (index1 + 1 > 10 ? index1 +1 : '0' + (index1 + 1 )) + '-' + (index2 +1 > 10 ? index2 + 1 : '0' + (index2 + 1));
+
+            this.$emit('woexConfirm', date);
+
+          }
+
         },
         touchStartEvent(event) {
-
-          if (this.inertiaTimer) {
-            clearInterval(this.inertiaTimer);
-            this.inertiaTimer = null;
-          }
           this.currentSec = parseInt(event.target.getAttribute('section'));
+          if (this.inertiaTimer[this.currentSec]) {
+            clearInterval(this.inertiaTimer[this.currentSec]);
+            this.inertiaTimer[this.currentSec] = null;
+          }
+
           this.startY = event.targetTouches[0].pageY;
           this.recordTime = new Date().getTime();
           this.recordY = this.startY;
@@ -227,15 +245,12 @@
             this.recordSpeed = distance / duration;
           }
 
-
-
           switch (this.currentSec) {
             case 1:
               this.moveDeg1 = this.startDeg + (move / 60) * 30;
               this.selectOpts1 = Math.floor(this.moveDeg1 / 30);
               break;
             case 2:
-
               this.moveDeg2 = this.startDeg + (move / 60) * 30;
               this.selectOpts2 = Math.floor(this.moveDeg2 / 30);
               break;
@@ -259,11 +274,11 @@
             startSpeed = Math.abs(startY - event.changedTouches[0].pageY ) / 200;
           }
 
-          this.inertiaTimer = setInterval(() => {
+          this.inertiaTimer[currentSec] = setInterval(() => {
             if (startSpeed < 0) {
               this.autoAdjustPosition(currentSec);
-              clearInterval(this.inertiaTimer);
-              this.inertiaTimer = null;
+              clearInterval(this.inertiaTimer[currentSec]);
+              this.inertiaTimer[currentSec] = null;
             }else {
               startSpeed -= speedA / 1000;
             }
@@ -334,7 +349,6 @@
                 if (offset > 15) {
                   if (distance > 30 - offset) {
                     clearInterval(offsetTimer);
-
                   }
                     moveDeg += positive;
                 }else {
@@ -366,6 +380,23 @@
               this.moveDeg2 = moveDeg;
             }
           }
+        },
+        caculateIndex(deg) {
+          let positive = deg >= 0 ? 1 : -1;
+          let absDeg = Math.abs(deg);
+          let offset = absDeg - Math.floor(absDeg / 30) * 30;
+          let index = Math.floor(absDeg / 30);
+
+
+          if (15 < offset) {
+            if (1 === positive) {
+              index++;
+            }else {
+              index--;
+            }
+          }
+
+          return index * positive;
         }
       }
   }

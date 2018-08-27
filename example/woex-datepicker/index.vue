@@ -5,18 +5,9 @@
       <category title="类型样式"></category>
       <div class="datepicker-list">
         <text class="btn-text">默认日期选择器</text>
-        <woex-button text="开启" @woexButtonClicked="showNormalPicker"></woex-button>
+        <woex-button text="开启" @woexClicked="showNormalPicker"></woex-button>
       </div>
       <woex-datepicker :show="show" @woexConfirm="confirmEvent" @woexCancel="cancelEvent"></woex-datepicker>
-      <!--<div class="btn-list">-->
-        <!--<text class="btn-text">red </text>-->
-        <!--<woex-button @woexButtonClicked="woexButtonClicked" text="red" type="red"></woex-button>-->
-        <!--<text class="btn-text">red && disabled</text>-->
-        <!--<woex-button @woexButtonClicked="woexButtonClicked" text="red && disabled" type="red" disabled="true"></woex-button>-->
-        <!--<text class="btn-text">white</text>-->
-        <!--<woex-button @woexButtonClicked="woexButtonClicked" text="white" type="white"></woex-button>-->
-      <!--</div>-->
-
     </scroller>
   </div>
 </template>
@@ -47,7 +38,7 @@
   import Title from '../_mods/title.vue';
   import Category from '../_mods/category.vue';
   import { setTitle } from '../_mods/set-nav';
-  import {WoexButton, WoexDatepicker} from '../../index';
+  import {WoexButton, WoexDatepicker, WoexToast} from '../../index';
 
   export default {
     components: { Title, Category, WoexButton, WoexDatepicker},
@@ -60,15 +51,14 @@
         const { type, disabled } = e;
       },
       showNormalPicker (e) {
-        console.log('222222');
         this.show = true;
       },
       cancelEvent (e) {
-        console.log('2222');
         this.show = false;
       },
       confirmEvent (e) {
-        console.log('1111');
+        this.show = false;
+        this.$toast(e);
 
       }
     }
