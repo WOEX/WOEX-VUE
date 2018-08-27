@@ -6,6 +6,9 @@ export const STYLE_MAP = {
   },
   white: {
     background: '#FFFFFF'
+  },
+  custom: {
+
   }
 }
 
@@ -27,6 +30,9 @@ export const TEXT_STYLE_MAP = {
 export const TEXT_FONTSIZE_STYLE_MAP = {
   full: {
     fontSize: '34px'
+  },
+  custom: {
+
   }
 }
 

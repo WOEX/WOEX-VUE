@@ -14,7 +14,7 @@
     props: {
       text:{
         type: String,
-        default: '确定'
+        default: '确 定'
       },
       size: {
         type: String,
@@ -62,7 +62,7 @@
     methods:{
       onClicked(e) {
         const {type, disabled} = this;
-        this.$emit('woexButtonClicked', {e, type, disabled});
+        this.$emit('woexClicked', {e, type, disabled});
       }
     }
   }

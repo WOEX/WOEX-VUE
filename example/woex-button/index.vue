@@ -5,11 +5,13 @@
       <category title="类型样式"></category>
       <div class="btn-list">
         <text class="btn-text">red </text>
-        <woex-button @woexButtonClicked="woexButtonClicked" text="red" type="red"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked" text="red" type="red"></woex-button>
         <text class="btn-text">red && disabled</text>
-        <woex-button @woexButtonClicked="woexButtonClicked" text="red && disabled" type="red" disabled="true"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked" text="red && disabled" type="red" disabled="true"></woex-button>
         <text class="btn-text">white</text>
-        <woex-button @woexButtonClicked="woexButtonClicked" text="white" type="white"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked" text="white" type="white"></woex-button>
+        <text class="btn-text">custom</text>
+        <woex-button text="custom" type="custom" :textStyle='{color:"#333"}' style="height: 80px;background: orange;"></woex-button>
       </div>
 
     </scroller>
