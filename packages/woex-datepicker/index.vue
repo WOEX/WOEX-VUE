@@ -126,18 +126,15 @@
       },
       watch:{
         selectOpts0: function (oldVal) {
-
           this.reorderDates(0, oldVal);
         },
         selectOpts1: function (oldVal) {
-
           this.reorderDates(1, oldVal);
         },
         selectOpts2: function (oldVal) {
           this.reorderDates(2, oldVal);
         },
         show: function(newVal) {
-          console.log(newVal);
           for (let i =0 ; i < this.selectOptions.length; i++) {
             if (newVal) {
               this.autoAdjustPosition(i, false);
