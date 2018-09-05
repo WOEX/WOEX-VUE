@@ -17,6 +17,7 @@ import WoexLabel from './packages/woex-label';
 import WoexSwitcher from './packages/woex-switcher';
 import WoexSixfield from './packages/woex-sixfield';
 import WoexSegmentbar from './packages/woex-segmentbar';
+import WoexSearchbar from './packages/woex-searchbar';
 
 import WoexFetch from './packages/woex-fetch';
 
@@ -41,5 +42,6 @@ export {
   WoexLabel,
   WoexSwitcher,
   WoexSixfield,
-  WoexSegmentbar
+  WoexSegmentbar,
+  WoexSearchbar
 };

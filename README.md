@@ -18,3 +18,7 @@ npm run build
 npm run build --report
 ```
 
+#v1.0.12
+添加segmentBar组件
+#v1.0.13
+添加searchBar组件
