@@ -1,35 +1,81 @@
 <template>
-  <div class="woex-demo">
-    <scroller class="scroller">
-      <title title="woex-sixfield"></title>
-      <category title="类型样式"></category>
-      <woex-searchbar hasHint=true hintText="123"></woex-searchbar>
-    </scroller>
+  <div>
+    <div class="search-section" :style="searchStyle">
+      <div class="search-wrapper" :style="wrapperStyle">
+        <slot name="hint" v-if="hasHint"></slot>
+        <woex-textfield class="search-textfield" :height="fieldHeight" padding=28 backgroundColor="transparent" :placeholder="placehoder" :fontSize="fontSize" :fontColor="fontColor" :placeholderColor="placeholderColor"></woex-textfield>
+      </div>
+    </div>
   </div>
 </template>
 
-
 <script>
-  import {WoexSearchbar} from '../../index';
-
+  import WoexTextfield from '../woex-textfield';
   export default {
-    components: {WoexSearchbar},
-    methods: {
-
+    components: { WoexTextfield },
+    props:{
+      placehoder: {
+        type: String,
+        default: ''
+      },
+      height: {
+        type: [String, Number],
+        default: 100
+      },
+      placeholderColor: {
+        type: String,
+        default: '#A3A3A3'
+      },
+      fontSize: {
+        type: [String, Number],
+        dafault: '32'
+      },
+      fontColor:{
+        type: String,
+        default: '#333'
+      },
+      fieldHeight: {
+        type: [String, Number],
+        default: 60
+      },
+      hasHint: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      searchStyle() {
+        const { height } = this;
+        return {
+          height: height + 'px'
+        }
+      },
+      wrapperStyle() {
+        const { fieldHeight } = this;
+        return {
+          height: fieldHeight + 'px',
+          borderRadius: parseFloat(fieldHeight) / 2 + 'px',
+          paddingLeft: parseFloat(fieldHeight) / 2 + 'px'
+        }
+      }
     }
   }
 </script>
 
 <style scoped>
-  .woex-demo {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: #fff;
+  .search-section {
+    width: 750px;
   }
-  .scroller {
-    flex: 1;
+  .search-wrapper {
+    width: 682px;
+    margin: 20px 34px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .search-textfield {
+    background-color: transparent;
+    flex: 1
   }
 </style>

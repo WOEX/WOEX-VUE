@@ -1,10 +1,16 @@
 <template>
-  <scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal" :style="scrollerStyle">
-    <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem">
-      <text class="item-text" v-bind:itemIndex="index">{{item}}</text>
-      <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
+  <div class="segment-container" :style="scrollerStyle">
+    <div class="segment-inner">
+      <scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal">
+        <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem">
+          <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
+          <div v-if="hasBorder" :style="borderStyle" class="segment-border"></div>
+          <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
+        </div>
+      </scroller>
     </div>
-  </scroller>
+  </div>
+
 </template>
 
 <script>
@@ -24,16 +30,28 @@
       },
       textStyle: {
         type: Object,
-        default: {
+        default: () =>({
           color: '#999',
           fontSize: '28px'
-        }
+        })
+      },
+      selectedColor: {
+        type: String,
+        default: '#999'
       },
       hintStyle: {
         type: Object,
-        default: {
-          color: 'blue'
-        }
+        default: () =>({
+        })
+      },
+      hasBorder: {
+        type: [String, Boolean],
+        default: true
+      },
+      borderStyle: {
+        type: Object,
+        default: () =>({
+        })
       }
     },
     data: () => ({
@@ -46,11 +64,22 @@
           height: height + 'px'
         }
       },
-      itemStyle(){
+      itemStyle() {
         const { height, itemWidth } = this;
         return {
           height: height + 'px',
           width: itemWidth + 'px'
+        }
+      },
+      normalStyle() {
+        const { textStyle } = this;
+        return textStyle;
+      },
+      selectStyle() {
+        const { textStyle, selectedColor } = this;
+        return {
+          ...textStyle,
+          color: selectedColor
         }
       }
     },
@@ -65,22 +94,50 @@
 </script>
 
 <style scoped>
+  .segment-container {
+    width: 750px;
+    overflow: hidden;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .segment-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top:0;
+    bottom: 0;
+    overflow: hidden;
+    overflow-x: scroll;
+  }
   .segment-bar{
-    width: 100%
+    width: 100%;
+    -webkit-overflow-scrolling: auto;
+  }
+  .segment-bar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
   }
   .segment-item {
     flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
   .item-text {
     text-align: center
   }
   .selected-hint {
     background-color: #fa5e5b;
-    height: 6px;
-    width: 80%;
+    height: 2px;
+    width: 40px;
     bottom: 0;
-    left: 10%;
     position: absolute;
+  }
+  .segment-border{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #ddd;
   }
 </style>

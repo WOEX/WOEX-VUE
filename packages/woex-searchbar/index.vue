@@ -2,21 +2,17 @@
   <div>
     <div class="search-section" :style="searchStyle">
       <div class="search-wrapper" :style="wrapperStyle">
-        <woex-image v-if="hasHint && hintUrl" :style="hintStyle" :url="hintUrl">
-        </woex-image>
-        <woex-text v-if="hasHint && hintText" >{{ hintText }}</woex-text>
-        <woex-textfield class="search-textfield" :height="fieldHeight" padding=28 backgroundColor="transparent" :style="fieldStyle"></woex-textfield>
+        <slot name="hint" v-if="hasHint"></slot>
+        <woex-textfield class="search-textfield" :height="fieldHeight" padding=28 backgroundColor="transparent" :placeholder="placehoder" :style="fieldStyle"></woex-textfield>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import WoexImage from '../woex-image';
   import WoexTextfield from '../woex-textfield';
-  import WoexText from '../woex-text';
   export default {
-    components: { WoexTextfield, WoexImage, WoexText },
+    components: { WoexTextfield },
     props:{
       placehoder: {
         type: String,
@@ -38,19 +34,6 @@
       hasHint: {
         type: Boolean,
         default: false
-      },
-      hintUrl: {
-        type: String
-      },
-      hintText: {
-        type: String
-      },
-      hintStyle: {
-        type: Object,
-        default: {
-          width: '40px',
-          height: '40px'
-        }
       }
     },
     computed: {

@@ -22,3 +22,11 @@ npm run build --report
 添加segmentBar组件
 #v1.0.13
 添加searchBar组件
+#v1.0.14
+searchBar组件添加placeholder
+#v1.0.15
+searchBar组件优化
+#v1.0.16
+segmentBar组件优化
+#v1.0.17
+searchBar组件优化

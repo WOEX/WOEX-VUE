@@ -1,5 +1,5 @@
 <template>
-  <div><image :style="mrImageStyle" :src="mrUrl" :resize="mrResize" :placeholder="mrPlaceHolder"></image></div>
+    <image :style="mrImageStyle" :src="mrUrl" :resize="mrResize" :placeholder="mrPlaceHolder"></image>
 </template>
 
 <script>
