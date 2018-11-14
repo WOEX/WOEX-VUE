@@ -8673,6 +8673,7 @@ This method searches for multiple shapes that affect a single element and one of
     this.segments = [];
     this._idle = true;
     this.projectInterface = ProjectInterface();
+    this.startFrame = 0;
   };
 
   extendPrototype([BaseEvent], AnimationItem);
@@ -9045,8 +9046,8 @@ This method searches for multiple shapes that affect a single element and one of
         }
       } else if (nextValue >= this.totalFrames) {
         this.playCount += 1;
-        if (!this.checkSegments(nextValue % this.totalFrames)) {
-          this.setCurrentRawFrameValue(nextValue % this.totalFrames);
+        if (!this.checkSegments(this.startFrame)) {
+          this.setCurrentRawFrameValue(this.startFrame);
           this.trigger('loopComplete');
         }
       } else {

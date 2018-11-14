@@ -1,20 +1,24 @@
 <template>
   <div class="segment-container" :style="scrollerStyle">
-    <div class="segment-inner">
-      <scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal">
-        <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem">
-          <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
-          <div v-if="hasBorder" :style="borderStyle" class="segment-border"></div>
-          <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
-        </div>
-      </scroller>
-    </div>
+
+    <woex-scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal">
+
+      <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem($event, index)">
+        <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
+        <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
+      </div>
+
+    </woex-scroller>
+
   </div>
 
 </template>
 
 <script>
+  import WoexScroller from '../woex-scroller';
+
   export default {
+    components: { WoexScroller },
     props: {
       height: {
         type: [Number, String],
@@ -44,14 +48,14 @@
         default: () =>({
         })
       },
-      hasBorder: {
-        type: [String, Boolean],
-        default: true
-      },
       borderStyle: {
         type: Object,
         default: () =>({
         })
+      },
+      preset: {
+        type: [ Number, String ],
+        default: 0
       }
     },
     data: () => ({
@@ -67,8 +71,7 @@
       itemStyle() {
         const { height, itemWidth } = this;
         return {
-          height: height + 'px',
-          width: itemWidth + 'px'
+          height: height + 'px'
         }
       },
       normalStyle() {
@@ -83,11 +86,17 @@
         }
       }
     },
+    mounted(){
+      const { preset } = this;
+      this.selectedIndex = parseInt(preset);
+    },
     methods: {
-      selectItem(event) {
-        const index = parseInt(event.target.getAttribute('itemIndex'));
+      selectItem(event, index) {
         this.selectedIndex = index;
         this.$emit('scrollToIndex', index);
+      },
+      switchToIndex(index) {
+        this.selectedIndex = index;
       }
     }
   }
@@ -111,7 +120,8 @@
   }
   .segment-bar{
     width: 100%;
-    -webkit-overflow-scrolling: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 80px;
   }
   .segment-bar::-webkit-scrollbar {
     width: 0px;
@@ -121,6 +131,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 16px;
   }
   .item-text {
     text-align: center
@@ -128,16 +139,9 @@
   .selected-hint {
     background-color: #fa5e5b;
     height: 2px;
-    width: 40px;
-    bottom: 0;
+    left: 16px;
+    right: 16px;
+    bottom: 1px;
     position: absolute;
-  }
-  .segment-border{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #ddd;
   }
 </style>

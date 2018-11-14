@@ -1,5 +1,5 @@
 <template>
-    <image :style="mrImageStyle" :src="mrUrl" :resize="mrResize" :placeholder="mrPlaceHolder"></image>
+  <div class="woex-image" :style="mrImageStyle"></div>
 </template>
 
 <script>
@@ -21,28 +21,79 @@
         default:''
       }
     },
+    data:()=>({
+      loaded: false
+    }),
     computed: {
       mrImageStyle() {
 
-        const {imageStyle} = this;
-        return imageStyle;
-      },
-      mrUrl() {
-        const {url} = this;
-        return url;
-      },
-      mrResize() {
-        const {resize} = this;
-        return resize;
-      },
-      mrPlaceHolder() {
-        const {placeholder} = this;
-        console.log(placeholder);
-        return placeholder;
+        const { imageStyle, resize, loaded, placeholder, url  } = this;
+
+        const backgroundSize = 'cover' === resize ? 'cover' : '100% 100%';
+
+        if (loaded ) {
+          return {
+            ...imageStyle,
+            'background-size': backgroundSize,
+            'background-image': 'url(' + url + ')'
+          };
+        }else {
+          if (placeholder && placeholder.length > 0) {
+            return {
+              ...imageStyle,
+              'background-size': backgroundSize,
+              'background-image': 'url(' + placeholder + ')'
+            };
+          }else {
+            return {
+              ...imageStyle,
+              'background-size': backgroundSize
+            };
+          }
+        }
+      }
+    },
+    watch:{
+      url(val) {
+        this.loadUrl(val);
       }
     },
     methods: {
+      loadUrl(url){
+        if (null === url || undefined === url) {
+          return ;
+        }
 
+        if (url.indexOf('http') === 0) {
+          let image = new Image();
+          image.src = url;
+
+          image.completed = ()=> {
+            if (url === this.url) {
+              this.loaded = true;
+            }
+          }
+
+          image.onload = ()=> {
+            if (url === this.url) {
+              this.loaded = true;
+            }
+          }
+        }else  {
+          this.loaded = true;
+        }
+      }
+    },
+    mounted(){
+
+      this.loadUrl(this.url);
     }
   }
 </script>
+
+<style scoped>
+  .woex-image {
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+  }
+</style>

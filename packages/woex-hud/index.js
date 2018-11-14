@@ -9,10 +9,11 @@ const WoexHud = {
       return new Promise((resolve) => {
         if (!loading) {
           loading = new WoexHud({ propsData: options })
+          loading.$mount();
           loading.ref = 'woexLoading'
 
           const el = this.$el ? this.$el : document.querySelector('body')
-          loading.$mount(el)
+          el.appendChild(loading.$el);
           this.$refs.woexLoading = loading
         }
         resolve()
@@ -25,10 +26,8 @@ const WoexHud = {
           const loading = this.$refs.woexLoading
 
           if (loading) {
-          //  el.$remove(loading)
             loading.$destroy()
-         //   el.$forceUpdate()
-           // console.log(this.$refs)
+            el.removeChild(loading.$el);
           }
         }
         resolve()

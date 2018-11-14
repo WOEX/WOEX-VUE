@@ -1,22 +1,24 @@
 <template>
   <div class="woex-demo">
-    <woex-tableview class="woex-table" :numberOfSections="caculateSectons">
-      <header>
-        <div class="header">
-          <text class="header-text">I'm a ordinary header</text>
-        </div>
-      </header>
-      <woex-cell v-for="(item, i) in params" :key="i"  label='测试标题' title="123456" desc="描述文字" hasArrow="true" arrowIcon="https://gw.alicdn.com/tfs/TB11zBUpwMPMeJjy1XbXXcwxVXa-22-22.png">
+    <woex-scroller class="woex-table"></woex-scroller>
+    <!--<woex-tableview class="woex-table" :numberOfSections="caculateSectons">-->
+      <!--<header>-->
+        <!--<div class="header">-->
+          <!--<text class="header-text">I'm a ordinary header</text>-->
+        <!--</div>-->
+      <!--</header>-->
+      <!--<woex-cell v-for="(item, i) in params" :key="i"  label='测试标题' title="123456" desc="描述文字" hasArrow="true" arrowIcon="https://gw.alicdn.com/tfs/TB11zBUpwMPMeJjy1XbXXcwxVXa-22-22.png">-->
 
-      </woex-cell>
-    </woex-tableview>
+      <!--</woex-cell>-->
+    <!--</woex-tableview>-->
   </div>
 </template>
 
 <script>
   import {WoexTableview,WoexCell} from '../../index';
+  import { WoexScroller } from '../../index';
   export default{
-    components:{WoexTableview, WoexCell},
+    components:{WoexTableview, WoexCell, WoexScroller},
     data(){
       return {
         params: ['a','b','c','d']

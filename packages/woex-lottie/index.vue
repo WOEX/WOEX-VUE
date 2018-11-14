@@ -22,15 +22,22 @@
       },
       animationData:{
         type:Object
+      },
+      loop: {
+        type: Boolean,
+        default: false
+      }
+    },
+    watch: {
+      loop(val) {
+        this.anim.loop = val;
       }
     },
     data () {
       return {
         canvasStyle:{
           width: this.width ? `${this.width}px` : '100%',
-          height: this.height ? `${this.height}px` : '100%',
-          overflow: 'hidden',
-          margin: '0 auto'
+          height: this.height ? `${this.height}px` : '100%'
         }
       }
     },
@@ -42,8 +49,15 @@
           loop: this.loop !== false,
           autoplay: this.autoplay !== false,
           animationData: this.animationData
+        });
+
+        this.anim.onLoopComplete = ()=>{
+          this.$emit('complete');
         }
-      );
+
+        this.anim.onComplete = ()=>{
+          this.$emit('complete');
+        }
     },
     methods:{
       //跳到指定位置
@@ -57,6 +71,15 @@
       //停止动画
       stopAnimation: function(){
         this.anim.stop();
+      },
+      setEndFrame(frame) {
+        this.anim.totalFrames = frame;
+      },
+      setStartFrame(frame) {
+        this.anim.startFrame = frame;
+      },
+      loopComplete(){
+        console.log('compelete');
       }
     }
   }

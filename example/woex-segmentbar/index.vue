@@ -1,76 +1,129 @@
 <template>
-  <div>
-    <div class="search-section" :style="searchStyle">
-      <div class="search-wrapper" :style="wrapperStyle">
-        <slot name="hint" v-if="hasHint"></slot>
-        <woex-textfield class="search-textfield" :height="fieldHeight" padding=28 backgroundColor="transparent" :placeholder="placehoder" :style="fieldStyle"></woex-textfield>
+  <div class="segment-container" :style="scrollerStyle">
+    <div class="segment-bar" show-scrollbar="false" scroll-direction="horizontal" :style="segementStyle">
+      <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem">
+        <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
+        <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
       </div>
+
     </div>
   </div>
+
 </template>
 
 <script>
-  import WoexTextfield from '../woex-textfield';
   export default {
-    components: { WoexTextfield },
-    props:{
-      placehoder: {
-        type: String,
-        default: ''
-      },
+    props: {
       height: {
-        type: [String, Number],
-        default: 100
+        type: [Number, String],
+        default: 80
       },
-      placehoder: {
-        type: String
+      items: {
+        type: Array,
+        default: []
       },
-      fieldStyle: {
+      itemWidth: {
+        type: [Number, String],
+        default: 150
+      },
+      textStyle: {
         type: Object,
-        dafault: () =>({})
+        default: () =>({
+          color: '#999',
+          fontSize: '28px'
+        })
       },
-      fieldHeight: {
-        type: [String, Number],
-        default: 60
+      selectedColor: {
+        type: String,
+        default: '#999'
       },
-      hasHint: {
+      hintStyle: {
+        type: Object,
+        default: () =>({
+        })
+      },
+      hasBorder: {
         type: [String, Boolean],
-        default: false
+        default: true
+      },
+      borderStyle: {
+        type: Object,
+        default: () =>({
+        })
       }
     },
+    data: () => ({
+      selectedIndex: 0
+    }),
     computed: {
-      searchStyle() {
+      scrollerStyle(){
         const { height } = this;
         return {
           height: height + 'px'
         }
       },
-      wrapperStyle() {
-        const { fieldHeight } = this;
+      segementStyle(){
+        const { height } = this;
         return {
-          height: fieldHeight + 'px',
-          borderRadius: parseFloat(fieldHeight) / 2 + 'px',
-          paddingLeft: parseFloat(fieldHeight) / 2 + 'px'
+          height: (parseFloat(height) + 40) + 'px'
         }
+      },
+      itemStyle() {
+        const { height, itemWidth } = this;
+        return {
+          height: height + 'px',
+          width: itemWidth + 'px'
+        }
+      },
+      normalStyle() {
+        const { textStyle } = this;
+        return textStyle;
+      },
+      selectStyle() {
+        const { textStyle, selectedColor } = this;
+        return {
+          ...textStyle,
+          color: selectedColor
+        }
+      }
+    },
+    methods: {
+      selectItem(event) {
+        const index = parseInt(event.target.getAttribute('itemIndex'));
+        this.selectedIndex = index;
+        this.$emit('scrollToIndex', index);
       }
     }
   }
 </script>
 
 <style scoped>
-  .search-section {
+  .segment-container {
     width: 750px;
+    overflow: hidden;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-overflow-scrolling: touch;
   }
-  .search-wrapper {
-    width: 682px;
-    margin: 20px 34px;
-    background: #f5f5f5;
+  .segment-bar{
+    width: 750px;
+    overflow-x: scroll;
     display: flex;
     flex-direction: row;
+  }
+  .segment-item {
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
   }
-  .search-textfield {
-    background-color: transparent;
-    flex: 1
+  .item-text {
+    text-align: center
+  }
+  .selected-hint {
+    background-color: #fa5e5b;
+    height: 2px;
+    width: 40px;
+    bottom: 0;
+    position: absolute;
   }
 </style>

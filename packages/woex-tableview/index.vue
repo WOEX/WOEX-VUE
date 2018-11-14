@@ -125,9 +125,6 @@
     },
     methods:{
       pullingdown(e) {
-
-        //h5需注释，原生提供了viewHeight
-      //  this.refreshHeight = e.viewHeight;
         this.refreshShow = 'show';
         this.pullingDistance = e.pullingDistance;
 
@@ -135,7 +132,6 @@
           this.status = 0;
           this.refreshShow = 'hide';
           this.$refs.lottie.stopAnimation();
-
         }
       },
       onrefresh(e){

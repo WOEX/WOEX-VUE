@@ -1,8 +1,16 @@
 <template>
   <div class="textfield-wrapper" :style="wrapperStyle">
-    <text v-if="title" :style="titleStyle" class="title">{{title}}</text>
-    <input ref="textfield" :id="inputId" class="textfield textfield-clear" :style="inputStyle" :type="inputType" :placeholder="placeholder" :disabled="disabled" :autofocus="autofocus" :maxlength="maxlength" :returnKeyType="returnKeyType"
-           @focus="focusEvent" @blur="blurEvent" @input="inputEvent" @click.prevent="clickEvent"/>
+    <text v-if="title" :style="titleStyleMap" class="title">{{title}}</text>
+    <template v-if="readonly">
+      <input v-if="parseInt(maxlines) <= 1" ref="textfield" :id="inputId" class="textfield textfield-clear" :style="inputStyleMap" :type="inputType" :placeholder="placeholder" :readonly="readonly" :autofocus="autofocus" :maxlength="maxlength" :returnKeyType="returnKeyType"/>
+      <textarea v-else="" ref="textfield" :id="inputId" class="textfield textfield-clear" :style="inputStyleMap" :type="inputType" :placeholder="placeholder" :readonly="readonly" :autofocus="autofocus" :maxlength="maxlength" :returnKeyType="returnKeyType"></textarea>
+    </template>
+    <template v-else>
+      <input v-if="parseInt(maxlines) <= 1" ref="textfield" :id="inputId" class="textfield textfield-clear" :style="inputStyleMap" :type="inputType" :placeholder="placeholder" :autofocus="autofocus" :maxlength="maxlength" :returnKeyType="returnKeyType"
+             @focus="focusEvent" @blur="blurEvent" @input="inputEvent" @click="clickEvent"/>
+      <textarea v-else="" ref="textfield" :id="inputId" class="textfield textfield-clear" :style="inputStyleMap" :type="inputType" :placeholder="placeholder" :autofocus="autofocus" :maxlength="maxlength" :returnKeyType="returnKeyType"
+                @focus="focusEvent" @blur="blurEvent" @input="inputEvent" @click="clickEvent"></textarea>
+    </template>
     <slot></slot>
   </div>
 </template>
@@ -21,8 +29,8 @@
         type: String,
         default: ''
       },
-      disabled: {
-        type: Boolean,
+      readonly: {
+        type: [String, Boolean],
         default: false
       },
       autofocus: {
@@ -71,11 +79,31 @@
       hasClear: {
         type: Boolean,
         default: true
+      },
+      textAlign: {
+        type: String,
+        default: 'left'
+      },
+      preset: {
+        type: String,
+        default: ''
+      },
+      inputStyle: {
+        type: Object,
+        default: ()=>({})
+      },
+      titleStyle: {
+        type: Object,
+        default: ()=>({})
+      },
+      maxlines: {
+        type: [ String, Number],
+        default: 1
       }
     },
     data: function(){
       return {
-        focus: false,
+        isFocus: false,
         value: '',
         val: '',
         inputId: MathUtils.randomString(8),
@@ -91,18 +119,20 @@
           marginRight: padding + 'px'
         }
       },
-      inputStyle: function() {
-        const {fontSize, placeholderColor, fontColor, height, focus, value, hasClear, backgroundColor} = this;
+      inputStyleMap: function() {
+        const { inputStyle, fontSize, placeholderColor, fontColor, height, isFocus, value, hasClear, backgroundColor, textAlign} = this;
         const styles = {
           fontSize: fontSize + 'px',
           placeholderColor: placeholderColor,
           color: fontColor,
           height: height + 'px',
-          backgroundColor: backgroundColor
-          };
+          backgroundColor: backgroundColor,
+          textAlign: textAlign,
+          ...inputStyle
+        };
 
         if (hasClear ) {
-          if (focus && value.length > 0) {
+          if (isFocus && value.length > 0) {
             return {
               ...styles,
               paddingRight: '0.75rem',
@@ -111,23 +141,25 @@
           }else {
             return {
               ...styles,
-              paddingRight: '0.75rem'
+              paddingRight: value.length === 0 ?  '0' : '0.75rem'
             }
           }
         }else {
           return styles;
         }
       },
-      titleStyle: function () {
-        const {height} = this;
+      titleStyleMap: function () {
+        const { height, titleStyle, title, maxlines } = this;
         return {
-          lineHeight: height + 'px'
+          lineHeight: height / parseInt(maxlines) + 'px',
+          ...titleStyle,
+          width: title.length * 30 + 'px'
         }
       },
       clearStyle: function () {
-        const {focus, value} = this;
+        const {isFocus, value} = this;
 
-        return ( focus && value.length > -1) ? {
+        return ( isFocus && value.length > -1) ? {
           'backgroundImage': "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAQAAAD97QrkAAABuklEQVRIx52VvU4CQRDHB60M8Q0IDQnvYUFi4wNYWFBYESpCa6eVPohUYuELzOxFwkEgGqMm0uhZAA0NH41/Czi4vdvdA3a7ycxvZ+eTyHhaRanLI/v8KwsJpC1NrqkCbXdwqC75jWG68qLKOEgB8JnNfIPxTu3vH6hbt/kac4OMASDH8rQdgMGQZj+b8GAXAIMhDzFP+G43AIMh13oQsc+V0jqN0Sx8YoYfswECzPARlfRWKVaXUcUZAGBkAIwBAFNNqi6W39Aq4QcwQEIA8K3Lu0TUKsbfGyUgG8Aw6V2epJ78tQ5xARiqSvJoCt0G4gYwuEHsmxMWQuZuAFgR/9qyHkKcAPCAZGEtnLUHc1d5TUgCG2Ac8WJkh3yRtN2AeRpESJouwNBYJ5ruPXHNDeA0SIVUIQ3ghjzniEheo6LAksYQEutif9mp5WSnDq11oneqdx4OvZeN8APTWDdGu3iK96iksx5+3uleM+tPTqLz+2YPxJU+wTOm+nDeRmKX9LPysAvAOzJts4xcbxmDK+M2W8WkJL0UREcLomWzXkjXYu575473Y97kVZUbrHggEx6wyD1XnnNm3X+CKiA+VpC08gAAAABJRU5ErkJggg==')",
           'display': 'inherit'
         } : {
@@ -141,26 +173,28 @@
         }
       },
       clearShow: function () {
-        const {focus, value} = this;
-        return focus && value.length > 0;
+        const {isFocus, value} = this;
+        return isFocus && value.length > 0;
       },
       inputType: function () {
         const {type} = this;
-        //判断输入框键盘类型
-        if ('text' === type){
-          return 'text';
-        }
+//        //判断输入框键盘类型
+//        if (null == type) {
+//          return 'text';
+//        }
 
         return 'text';
+//        return type;
       }
     },
     methods:{
       focusEvent: function (e) {
-        this.focus = true;
-
+        this.isFocus = true;
+        this.$emit('textFocus');
       },
       blurEvent: function(e) {
-        this.focus = false;
+        this.isFocus = false;
+        this.$emit('textBlur');
       },
       inputEvent: function (event) {
         const {type} = this;
@@ -187,9 +221,15 @@
 
           this.$refs.textfield.$el.value = INPUT_FORMATTER[type](event.value);
           this.$refs.textfield.setSelectionRange(targetSelectEnd, targetSelectEnd);
+        }else if ('integer' === type) {
+          const selectionEnd = event.target.selectionEnd;
+          let targetSelectEnd = INPUT_FILTER.integer(event.value.substr(0, selectionEnd)).length;
+
+          this.$refs.textfield.$el.value = INPUT_FORMATTER[type](event.value);
+          this.$refs.textfield.setSelectionRange(targetSelectEnd, targetSelectEnd);
         }
 
-        this.value = event.value;
+        this.value = this.$refs.textfield.$el.value;
         this.$emit('valueChanged', this.value);
       },
       clickEvent: function (e) {
@@ -204,15 +244,52 @@
           return false;
         }
 
-        const x = e.touch.pageX - e.currentTarget.offsetParent.offsetLeft;
-        const width = e.currentTarget.clientWidth;
-        if (x > width - 0.8 * parseFloat(document.documentElement.style.fontSize)) {
+        const x = e.touch.pageX;
+        const width = this.$refs.textfield.$el.clientWidth;
+
+        const leftPadding = this.calculateElX(this.$refs.textfield.$el)
+
+        if (x < leftPadding + width && x > leftPadding + width - 0.6 * parseFloat(document.documentElement.style.fontSize)) {
+          e.preventDefault();
           this.$refs.textfield.$el.value = '';
           this.value = '';
           this.$emit('valueChanged', this.value);
         }
 
         return false;
+      },
+      clear(){
+        this.$refs.textfield.$el.value = '';
+        this.value = '';
+      },
+      calculateElX(element){
+        var actualLeft = element.offsetLeft;
+        var current = element.offsetParent;
+
+        while (current !== null){
+          actualLeft += current.offsetLeft;
+          current = current.offsetParent;
+        }
+
+        return actualLeft;
+      },
+      setText(text){
+        this.$refs.textfield.$el.value = text;
+        this.value = text;
+        this.$emit('valueChanged', this.value);
+      },
+      blur(){
+        this.$refs.textfield.$el.blur();
+      },
+      focus(){
+        this.$refs.textfield.$el.focus();
+      }
+    },
+    mounted(){
+      const { preset } = this;
+      if (undefined !== preset && null !== preset) {
+        this.$refs.textfield.$el.value = preset;
+        this.value = preset;
       }
     }
   }
@@ -229,8 +306,10 @@
     flex:1;
     caret-color: #FA5E5B;
   }
+  .textarea {
+    margin: 34px 0;
+  }
   .title{
-    margin-right: 40px;
     color:#333333
   }
   .clear{

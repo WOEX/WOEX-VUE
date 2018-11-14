@@ -71,7 +71,6 @@
   .woex-label {
     color: #333;
     font-size: 28px;
-    display: inline;
   }
   .woex-label-list {
     display: flex;

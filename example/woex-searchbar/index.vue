@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import WoexTextfield from '../woex-textfield';
+  import WoexTextfield from '../../index';
   export default {
     components: { WoexTextfield },
     props:{

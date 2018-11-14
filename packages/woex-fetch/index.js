@@ -1,64 +1,86 @@
+import fetch from 'isomorphic-fetch';
+
 const Fetch = {
-  fetchData(params, isClient = false){
-    if (isClient){
-      if (undefined === params.url) {
-        if (params.error){
-          params.error();
-        }
-        return ;
+  fetchData(params) {
+    let data = "";
+    let success = params.success;
+    let failed = params.error;
+    for(let key in params.data){
+      params.data[key] === undefined?'':params.data[key];
+      data = data + key + "=" + encodeURIComponent(params.data[key]) + "&";
+    }
+
+    if (data.length > 0) {
+      data = data.substring(0, data.length - 1);
+    }
+
+    data.length === 0 && ( data = undefined );
+
+    let method = 'GET';
+    undefined !== params.method ? method = (params.method.toUpperCase() === 'get' ? 'GET' : 'POST') : null;
+
+    let url = params.url;
+
+    if ('GET' === method) {
+      if (url.indexOf('?') == -1 && data != undefined) {
+        url = url + '?' + data;
+      }else if (url.indexOf('?') >= 0 && data != undefined){
+        url = url + '&' + data;
       }
+      data = undefined;
+    }
 
-      let data = {
-        url:params.url,
-        data:params.data
-      };
+    let _fetch = (fetch_promise, timeout) => {
+      let abort_fn = null;
 
-      weex.requireModule('wpnet').fetchData(data, function(ret){
-        if ('0' === ret.code){
-          if (params.success){
-            params.success(ret.resp);
-          }
-        }else {
-          if(params.error){
-            params.error();
-          }
-        }
-      });
-    }else {
-      const stream = weex.requireModule('stream');
-      let data = "";
-      let success = params.success;
-      let failed = params.error;
-      for(let key in params.data){
-        params.data[key] === undefined?'':params.data[key];
-        data = data + key + "=" + encodeURIComponent(params.data[key]) + "&";
-      }
-
-      if (data.length > 0) {
-        data = data.substring(0, data.length - 1);
-      }
-
-      stream.fetch({
-        method:'POST',
-        type:'json',
-        url:params.url,
-        headers:{
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-        body:data
-      }, function(ret){
-        if(!ret.ok){
-          if(failed){
+      //这是一个可以被reject的promise
+      let abort_promise = new Promise(function(resolve, reject) {
+        abort_fn = function() {
+          if (failed) {
             failed();
           }
-        }else {
-          if(success){
-            success(ret.data);
-          }
-        }
-      })
-    }
+          resolve('request timeout');
+        };
+      });
+
+      let abortable_promise = Promise.race([
+        fetch_promise,
+        abort_promise
+      ]);
+
+      setTimeout(function() {
+        abort_fn();
+      }, timeout);
+
+      return abortable_promise;
+    };
+
+    _fetch(fetch(url, {
+      method:method,
+      type:'json',
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },
+      mode: "cors",
+      credentials: 'include',
+      body:data
+    }).then(response => {
+      return response.json();
+    }, err => {
+      throw err = new Error( 'net error');
+    }).then(data => {
+      if(success){
+        success(data);
+      }
+    },  err => {
+      if (failed) {
+        failed();
+      }
+    }), 30000)
+
+
+
   }
 };
 
