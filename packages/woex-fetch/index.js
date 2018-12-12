@@ -66,9 +66,13 @@ const Fetch = {
       credentials: 'include',
       body:data
     }).then(response => {
-      return response.json();
-    }, err => {
-      throw err = new Error( 'net error');
+      if (response.status < 500) {
+        return response.json();
+      }else  {
+        throw  new Error( 'net error');
+      }
+    }, () => {
+      throw  new Error( 'net error');
     }).then(data => {
       if(success){
         success(data);
@@ -78,9 +82,6 @@ const Fetch = {
         failed();
       }
     }), 30000)
-
-
-
   }
 };
 

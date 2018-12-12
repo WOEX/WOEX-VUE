@@ -4,7 +4,7 @@
       <slot></slot>
     </div>
     <div ref="loadW">
-      <loading class="loading" ref="loading"  v-if="loadingmore" :style="loadingStyle"></loading>
+      <loading class="loading" ref="loading"  v-if="loadingmore"></loading>
     </div>
   </div>
 </template>
@@ -46,7 +46,8 @@
     data:()=>({
       _touchParams: null,
       loadingOffset: 0,
-      loadingStatus: 0
+      loadingStatus: 0,
+      windowRatio: 1,
     }),
     computed: {
       wrapperClass () {
@@ -72,12 +73,6 @@
         }
 
         return classArray.join(' ')
-      },
-      loadingStyle(){
-        const { loadingOffset } = this;
-        return {
-          'height': loadingOffset + 'px'
-        }
       }
     },
     methods: {
@@ -135,35 +130,7 @@
               }
             }
           }
-
         }
-//            if ('horizontal' === this.scrollDirection ) {
-//
-//            }else {
-//                this._touchParams.reachTop = this.reachTop();
-//                this._touchParams.reachBottom = this.reachBottom();
-//
-//                const inner = this.$refs.inner;
-//                if (inner) {
-//                    const touch = event.changedTouches[0];
-//                    const offsetY = touch.pageY - this._touchParams.startY
-//                    const dir = offsetY > 0 ? 'down' : 'up'
-//                    this._touchParams.offsetY = offsetY;
-//
-//                    if (this._touchParams.reachTop && 'down' === dir) {
-//                        event.cancelable && event.preventDefault();
-//                    }else if (this._touchParams.reachBottom && 'up' === dir){
-//                        this._touchParams.bottomOffset > 0 ? this._touchParams.bottomOffset = offsetY : '';
-//                        event.cancelable && event.preventDefault();
-//
-//                        if (this.loadingmore && (0 === this.loadingStatus || 3 === this.loadingStatus)) {
-//                            this.pullingUp(this._touchParams.scrollTop - offsetY - this.$refs.inner.clientHeight + this.$refs.wrapper.clientHeight);
-//                        }
-//                    }
-//                }
-//        }
-        //  }
-
       },
       touchEnd(event){
         if (!this._touchParams || !this.loadingmore) {
@@ -175,16 +142,11 @@
         }
 
         const inner = this.$refs.inner
-        const { startY, reachTop, reachBottom } = this._touchParams
-        if (inner) {
-          const touch = event.changedTouches[0]
-          const offsetY = touch.pageY - startY
-          const dir = offsetY > 0 ? 'down' : 'up'
-          this._touchParams.offsetY = offsetY
 
-          if (this.hasmore && this.loadingOffset > 45 * 750 / document.body.clientWidth ) {
-            this.loadingStatus = 1;
+        if (inner) {
+          if (this.hasmore && this.loadingOffset > 80 * this.windowRatio ) {
             this.startLoading();
+            this.loadingStatus = 1;
             this.$emit('loadmore');
           }else {
             this.resetLoading();
@@ -200,8 +162,8 @@
 
       reachBottom () {
         const wrapper = this.$refs.wrapper
-        const inner = this.$refs.inner
-
+        const inner = this.$refs.inner;
+        const loadW = this.$refs.loadW;
 
         if (wrapper && inner) {
 
@@ -210,13 +172,13 @@
             : 'height'
           const innerLength = 'height' === key ? this.$refs.inner.offsetHeight : this.$refs.inner.offsetWidth;
           const wrapperLength = 'height' === key ? this.$refs.wrapper.offsetHeight : this.$refs.wrapper.offsetWidth;
-
+          const loadWLenth = loadW ? loadW.offsetHeight : 0;
 
           const scrollOffset = this.scrollDirection === 'horizontal'
             ? wrapper.scrollLeft
             : wrapper.scrollTop
 
-          return scrollOffset >= innerLength - wrapperLength
+          return scrollOffset >= innerLength - wrapperLength + loadWLenth;
         }
         return false
       },
@@ -224,51 +186,51 @@
 
       },
       pullingUp(offsetY = 0){
-
-        this.$refs.loading.$el.style.transition = `height 0s`
         this.pulling(offsetY)
-
       },
       pulling (offsetY = 0) {
-        const wrapper = this.$refs.wrapper;
-        const inner = this.$refs.inner;
-        const loader = this.$refs.loading;
-
-        wrapper.scrollTop =  inner.clientHeight -  wrapper.offsetHeight + this.$refs.loadW.clientHeight;
-        this.loadingOffset = offsetY;
-
+          this.loadingOffset = offsetY;
+        this.$refs.loading.$el.style.transition = `height 0s`;
+          this.$refs.loading.$el.style.height = offsetY+ 'px';
       },
       resetLoading(){
-        this.$refs.loading.$el.style.transition = `height .2s`
+        this.$refs.loading.$el.style.transition = 'height .2s'
         this.loadingOffset = 0;
+        this.$refs.loading.$el.style.height = '0';
       },
       startLoading(){
-        this.$refs.loading.$el.style.transition = `height .2s`
-        this.loadingOffset = 45 * 750 / document.body.clientWidth;
+        this.$refs.loading.$el.style.transition = 'height .2s';
+        this.loadingOffset = 80 * this.windowRatio;
+        this.$refs.loading.$el.style.height = 80 * this.windowRatio + 'px';
         this.$refs.loading.start();
       },
       loadSuccess(){
-        this.$refs.loading.$el.style.transition = `height .2s`
+        this.$refs.loading.$el.style.transition = 'height .2s';
+        this.$refs.loading.$el.style.height = '0';
         this.loadingOffset = 0;
         this.$refs.loading.success();
         this.loadingStatus = 0;
       },
       loadEnd(){
         //加载完成
-        this.$refs.loading.$el.style.transition = `height .2s`
+        this.$refs.loading.$el.style.transition = 'height .2s';
+        this.$refs.loading.$el.style.height = '0';
         this.loadingOffset = 0;
         this.$refs.loading.end();
         this.loadingStatus = 3;
       },
       loadFailed(){
         //加载完成
-        this.$refs.loading.$el.style.transition = `height .2s`
+        this.$refs.loading.$el.style.transition = 'height .2s';
+        this.$refs.loading.$el.style.height = '0';
         this.loadingOffset = 0;
         this.$refs.loading.failed();
         this.loadingStatus = 0;
       } ,
       restore(){
-        this.$refs.loading.$el.style.transition = `height 0`
+        this.$refs.loading.$el.style.transition = 'height 0';
+        this.$refs.loading.$el.style.height = '0';
+
         this.loadingOffset = 0;
         this.loadingStatus = 0;
         this.$refs.loading.reset();
@@ -277,6 +239,9 @@
     mounted(){
       const { presetScrollTop } = this;
       this.$refs.wrapper.scrollTop = parseFloat(presetScrollTop);
+    },
+    created(){
+      this.windowRatio = document.body.clientWidth / 750;
     }
   }
 </script>

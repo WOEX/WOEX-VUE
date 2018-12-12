@@ -1,8 +1,6 @@
 <template>
   <div class="segment-container" :style="scrollerStyle">
-
     <woex-scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal">
-
       <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem($event, index)">
         <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
         <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>

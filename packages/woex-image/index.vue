@@ -1,5 +1,5 @@
 <template>
-  <div class="woex-image" :style="mrImageStyle"></div>
+  <div class="woex-image"></div>
 </template>
 
 <script>
@@ -8,9 +8,6 @@
       url: {
         type:String,
         default:''
-      },
-      imageStyle: {
-        type:Object
       },
       resize: {
         type:String,
@@ -27,26 +24,23 @@
     computed: {
       mrImageStyle() {
 
-        const { imageStyle, resize, loaded, placeholder, url  } = this;
+        const { resize, loaded, placeholder, url  } = this;
 
-        const backgroundSize = 'cover' === resize ? 'cover' : '100% 100%';
+        const backgroundSize = 'stretch' === resize.toLowerCase() ? '100% 100%' : resize;
 
         if (loaded ) {
           return {
-            ...imageStyle,
             'background-size': backgroundSize,
             'background-image': 'url(' + url + ')'
           };
         }else {
           if (placeholder && placeholder.length > 0) {
             return {
-              ...imageStyle,
               'background-size': backgroundSize,
               'background-image': 'url(' + placeholder + ')'
             };
           }else {
             return {
-              ...imageStyle,
               'background-size': backgroundSize
             };
           }

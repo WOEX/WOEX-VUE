@@ -1,7 +1,7 @@
 <template>
-  <div class="woex-btn" @click="onClicked" :style="mrBtnStyle" :accessable="true" :aria-label="text">
-    <woex-text class="btn-text" :style="mrTextStyle">{{text}}</woex-text>
-  </div>
+  <button class="woex-btn" @click="onClicked" :style="mrBtnStyle" :accessable="true" :aria-label="text">
+    <slot></slot>
+  </button>
 </template>
 
 <script>
@@ -34,11 +34,13 @@
 
     computed: {
       mrBtnStyle() {
-        const {type, disabled, btnStyle} = this;
+        const { type, disabled, btnStyle, size } = this;
 
         const mrBtnStyle = {
           ...btnStyle,
-          ...STYLE_MAP[type]
+          ...STYLE_MAP[type],
+          ...TEXT_STYLE_MAP[type],
+          ...TEXT_FONTSIZE_STYLE_MAP[size]
         };
 
 
@@ -61,8 +63,11 @@
     },
     methods:{
       onClicked(e) {
-        const {type, disabled} = this;
-        this.$emit('woexClicked', {e, type, disabled});
+        const { disabled } = this;
+        if (!disabled) {
+          this.$emit('woexClicked', e);
+        }
+
       }
     }
   }
@@ -76,14 +81,10 @@
     align-items: center;
     justify-content:center;
     opacity: 1;
-  }
-
-  .btn-text{
+    display: flex;
+    outline: none;
     text-overflow:ellipsis;
-    lines:1;
     font-size:34px;
     color:#fff;
   }
-
-
 </style>

@@ -30,18 +30,6 @@
       contentList: {
         type: [Array, String],
         default: () => ([])
-      },
-      link: {
-        type: String,
-        default: null
-      },
-      type: {
-        type: String,
-        default: 'href'
-      },
-      lines: {
-        type: [Number, String],
-        default: 0
       }
     },
     data: () => ({}),

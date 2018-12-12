@@ -5,13 +5,13 @@
       <category title="类型样式"></category>
       <div class="btn-list">
         <text class="btn-text">red </text>
-        <woex-button @woexClicked="woexButtonClicked" text="red" type="red"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked('red')" type="red">red</woex-button>
         <text class="btn-text">red && disabled</text>
-        <woex-button @woexClicked="woexButtonClicked" text="red && disabled" type="red" disabled="true"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked('red && disabled')" type="red" disabled="true">red && disabled</woex-button>
         <text class="btn-text">white</text>
-        <woex-button @woexClicked="woexButtonClicked" text="white" type="white"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked('white')" type="white">white</woex-button>
         <text class="btn-text">custom</text>
-        <woex-button text="custom" type="custom" :textStyle='{color:"#333"}' style="height: 80px;background: orange;"></woex-button>
+        <woex-button @woexClicked="woexButtonClicked('custom')" text="custom" style="height: 80px;background: orange;color:#333">custom</woex-button>
       </div>
 
     </scroller>
@@ -44,17 +44,15 @@
   import Title from '../_mods/title.vue';
   import Category from '../_mods/category.vue';
   import { setTitle } from '../_mods/set-nav';
-  import {WoexButton,WoexImage} from '../../index'
+  import {WoexButton,WoexImage, WoexToast } from '../../index';
+  Vue.use(WoexToast);
 
   const modal = weex.requireModule('modal');
   export default {
     components: { Title, Category, WoexButton,WoexImage},
     methods: {
-      woexButtonClicked (e) {
-        const { type, disabled } = e;
-        modal.toast({
-          message: disabled ? `disabled=${disabled}` : `type=${type}`
-        })
+      woexButtonClicked (type) {
+        this.$toast(`type=${type}`)
       }
     }
   }

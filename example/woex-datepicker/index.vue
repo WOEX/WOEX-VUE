@@ -40,6 +40,8 @@
   import { setTitle } from '../_mods/set-nav';
   import {WoexButton, WoexDatepicker, WoexToast} from '../../index';
 
+  Vue.use(WoexToast)
+
   export default {
     components: { Title, Category, WoexButton, WoexDatepicker},
     data: () => ({

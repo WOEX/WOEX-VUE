@@ -1,6 +1,6 @@
 {
   "name": "woex-vue",
-  "version": "1.0.41",
+  "version": "1.0.43",
   "description": "th vue UI framework for wopay's UI designs.",
   "author": "Ahri <yaoyw3@chinaunicom.cn>",
   "main": "index.js",
@@ -85,5 +85,9 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "peerDependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "velocity-animate": "^1.5.1"
+  }
 }

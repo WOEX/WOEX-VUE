@@ -25,10 +25,10 @@ const phoneFormatter = function (val) {
   let value = phoneFilter(val)
   const valueLen = value.length
   if (valueLen > 3 && valueLen < 8) {
-    value = value.replace(/^(...)/g, '$1 ')
+    value = value.replace(/^(\d{3})/g, '$1 ')
   }
   else if (valueLen >= 8) {
-    value = value.replace(/^(...)(....)/g, '$1 $2 ')
+    value = value.replace(/^(\d{3})(\d{4})(\d+)/g, '$1 $2 $3')
   }
   return value
 }
@@ -43,10 +43,10 @@ const idCardFormatter = function (val) {
   let value = idCardFilter(val)
   const valueLen = value.length
   if (valueLen > 6 && valueLen < 14) {
-    value = value.replace(/^(......)/g, '$1 ')
+    value = value.replace(/^(\d{6})/g, '$1 ')
   }
   else if (valueLen > 8) {
-    value = value.replace(/^(......)(........)/g, '$1 $2 ')
+    value = value.replace(/^(\d{6)(\d{8})/g, '$1 $2 ')
   }
   return value
 }

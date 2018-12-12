@@ -20,7 +20,7 @@
       },
       boxColor: {
         type:String,
-        default:'#FFFFFF'
+        default:'#FFF'
       },
       bgColor:{
         type:String,

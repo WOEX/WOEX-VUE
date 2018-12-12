@@ -9,13 +9,10 @@ export const dateOptionsBuilder = function(type, startDate, endDate)
         startDate = new Date();
       }
 
-      console.log(startDate);
-
     if (undefined === endDate) {
       endDate = new Date()
       endDate.setFullYear(startDate.getFullYear() + 100, startDate.getMonth(), startDate.getDay())
-    }
-    else if (endDate.getTime() < startDate.getTime()){
+    } else if (endDate.getTime() < startDate.getTime()){
       throw new Error( 'the endDate should never be ahead of the startDate' );
     }
 
@@ -41,7 +38,6 @@ export const dateOptionsBuilder = function(type, startDate, endDate)
     }
 
     options[2] = dayOptions;
-
   }
 
   return options;

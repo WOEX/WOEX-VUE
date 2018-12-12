@@ -22,11 +22,4 @@ const WoexToast = {
   }
 };
 
-//TODO:此部分待完善，去除全局引用
-//添加引用
-if (typeof window !== 'undefined' && window.Vue) {
-
-  window.Vue.use(WoexToast);
-}
-
 export default WoexToast;

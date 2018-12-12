@@ -158,18 +158,6 @@
   }
 </script>
 <style scoped>
-  .slider-wrapper {
-    position: relative;
-    overflow: hidden;
-  }
-  .slider-ul {
-    width: 100%;
-    height: 100%;
-  li {
-    position: absolute;
-
-  }
-  }
   .slider{
     display: flex;
     flex-direction: column;

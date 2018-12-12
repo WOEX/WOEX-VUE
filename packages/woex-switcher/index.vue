@@ -72,7 +72,7 @@
       }
     },
     watch: {
-      selected: function(newValue, oldValue) {
+      selected: function(newValue) {
         const { width, height, animated } = this;
 
         if (this.$refs['circle']) {
@@ -94,7 +94,6 @@
     },
     methods: {
       switchEvent(e) {
-        console.log('switch');
         this.$emit('switch');
       }
     }

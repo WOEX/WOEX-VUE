@@ -69,7 +69,7 @@
     props:{
       textColor: {
         type:String,
-        default:'#ffffff'
+        default:'#fff'
       },
       textSize:{
         type:Number,

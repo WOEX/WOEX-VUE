@@ -1,18 +1,24 @@
 <template>
   <div class="segment-container" :style="scrollerStyle">
-    <div class="segment-bar" show-scrollbar="false" scroll-direction="horizontal" :style="segementStyle">
-      <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem">
+
+    <woex-scroller class="segment-bar" show-scrollbar="false" scroll-direction="horizontal">
+
+      <div v-bind:itemIndex="index" v-for="(item, index) in items" class="segment-item" :style="itemStyle" @click="selectItem($event, index)">
         <text class="item-text" v-bind:itemIndex="index" :style="index === selectedIndex ? selectStyle : normalStyle">{{item}}</text>
         <div class="selected-hint" v-bind:itemIndex="index" :style=" index === selectedIndex ? hintStyle : {display: 'none'}"></div>
       </div>
 
-    </div>
+    </woex-scroller>
+
   </div>
 
 </template>
 
 <script>
+  import WoexScroller from '../woex-scroller';
+
   export default {
+    components: { WoexScroller },
     props: {
       height: {
         type: [Number, String],
@@ -24,7 +30,7 @@
       },
       itemWidth: {
         type: [Number, String],
-        default: 150
+        default: 0
       },
       textStyle: {
         type: Object,
@@ -37,19 +43,9 @@
         type: String,
         default: '#999'
       },
-      hintStyle: {
-        type: Object,
-        default: () =>({
-        })
-      },
-      hasBorder: {
-        type: [String, Boolean],
-        default: true
-      },
-      borderStyle: {
-        type: Object,
-        default: () =>({
-        })
+      preset: {
+        type: [ Number, String ],
+        default: 0
       }
     },
     data: () => ({
@@ -62,17 +58,14 @@
           height: height + 'px'
         }
       },
-      segementStyle(){
-        const { height } = this;
-        return {
-          height: (parseFloat(height) + 40) + 'px'
-        }
-      },
       itemStyle() {
         const { height, itemWidth } = this;
-        return {
+
+        return parseInt(itemWidth) > 0 ? {
           height: height + 'px',
           width: itemWidth + 'px'
+        } : {
+          height: height + 'px'
         }
       },
       normalStyle() {
@@ -87,11 +80,17 @@
         }
       }
     },
+    mounted(){
+      const { preset } = this;
+      this.selectedIndex = parseInt(preset);
+    },
     methods: {
-      selectItem(event) {
-        const index = parseInt(event.target.getAttribute('itemIndex'));
+      selectItem(event, index) {
         this.selectedIndex = index;
         this.$emit('scrollToIndex', index);
+      },
+      switchToIndex(index) {
+        this.selectedIndex = index;
       }
     }
   }
@@ -103,18 +102,30 @@
     overflow: hidden;
     position: relative;
     -webkit-tap-highlight-color: transparent;
-    -webkit-overflow-scrolling: touch;
+  }
+  .segment-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top:0;
+    bottom: 0;
+    overflow: hidden;
+    overflow-x: scroll;
   }
   .segment-bar{
-    width: 750px;
-    overflow-x: scroll;
-    display: flex;
-    flex-direction: row;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    height: 80px;
+  }
+  .segment-bar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
   .segment-item {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 16px;
   }
   .item-text {
     text-align: center
@@ -122,8 +133,9 @@
   .selected-hint {
     background-color: #fa5e5b;
     height: 2px;
-    width: 40px;
-    bottom: 0;
+    left: 16px;
+    right: 16px;
+    bottom: 1px;
     position: absolute;
   }
 </style>

@@ -5,25 +5,25 @@
     <category title="类型样式"></category>
     <div class="btn-list">
       <text class="btn-text">普通浮框展示 </text>
-      <woex-button @woexButtonClicked="showNormal" text="普通浮框展示"></woex-button>
+      <woex-button @woexClicked="showNormal">普通浮框展示</woex-button>
       <text class="btn-text">多行浮框展示</text>
-      <woex-button @woexButtonClicked="showLines" text="多行浮框展示"></woex-button>
+      <woex-button @woexClicked="showLines">多行浮框展示</woex-button>
       <text class="btn-text">控制显示时间</text>
-      <woex-button @woexButtonClicked="showDuration" text="控制显示时间"></woex-button>
+      <woex-button @woexClicked="showDuration">控制显示时间</woex-button>
     </div>
   </scroller>
 </div>
 </template>
 
 <script>
-  import Vue from 'vue';
   import Title from '../_mods/title.vue';
   import Category from '../_mods/category.vue';
   import { setTitle } from '../_mods/set-nav';
-  import {WoexButton} from '../../index'
+  import { WoexButton, WoexToast } from '../../index'
+  Vue.use(WoexToast)
 
   export default {
-    components: { Title, Category,WoexButton},
+    components: { Title, Category, WoexButton, WoexToast },
     methods:{
       showNormal(e){
         this.$toast('welcome to use WOEX !');

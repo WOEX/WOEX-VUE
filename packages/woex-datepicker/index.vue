@@ -1,17 +1,17 @@
 <template>
-  <div class="woex-datepicker"
+  <article class="woex-datepicker"
        ref="woex-datepicker"
        v-if="show"
        :style="overlayStyle"
        :hack="shouldShow">
-      <div class="fill"
+      <section class="fill"
            @touchstart.prevent="fillTouchEvent"
            @touchmove.prevent="fillTouchEvent"
-           @touchend.prevent="fillTouchEvent"></div>
-      <div class="container">
+           @touchend.prevent="fillTouchEvent"></section>
+      <aside class="container">
         <div class="btn-section">
-          <div class="btn-text left" @click="cancelEvent">{{cancelText}}</div>
-          <div class="btn-text right" @click="confirmEvent">{{confirmText}}</div>
+          <button class="btn-text left" @click="cancelEvent">{{cancelText}}</button>
+          <button class="btn-text right" @click="confirmEvent">{{confirmText}}</button>
         </div>
         <div class="picker">
           <div class="picker-section" v-for="(items, index) in selectOptions"
@@ -31,8 +31,8 @@
           <div class="section-line section-line-bottom"></div>
           <slot></slot>
         </div>
-      </div>
-  </div>
+      </aside>
+  </article>
 </template>
 
 <script>
@@ -187,8 +187,7 @@
       },
       methods: {
         appearOverlay(bool, duration = this.duration) {
-          const { hasAnimation, timingFunction, canAutoClose } = this;
-          const needEmit = !bool && canAutoClose;
+          const { hasAnimation, canAutoClose } = this;
           const overlayEl = this.$refs['woex-datepicker'];
           if (hasAnimation && overlayEl) {
             Velocity(overlayEl, {opacity: 1}, {duration: this.duration})
@@ -483,6 +482,8 @@
     height: 80px;
     line-height: 80px;
     top: 0;
+    background: transparent;
+    outline: none;
   }
   .left {
     left: 0;

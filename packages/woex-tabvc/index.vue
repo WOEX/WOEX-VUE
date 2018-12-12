@@ -17,13 +17,14 @@
            :accessible="true"
            :arial-label="`${v.title?v.title: '标签' + index}`"
       >
-        <image :src="currentPage == index ? v.activeIcon : v.icon"
+        <woex-image
+          :url="currentPage == index ? v.activeIcon : v.icon"
               v-if="titleType === 'icon'"
-              :style="{width: tabStyles.iconWidth + 'px',height:tabStyles.iconHeight + 'px'}"></image>
-        <text
+              :style="{width: tabStyles.iconWidth + 'px',height:tabStyles.iconHeight + 'px'}"></woex-image>
+        <woex-text
             class="tab-text"
             v-if="!titleUseSlot"
-            :style="{fontSize:tabStyles.fontSize + 'px', fontWight:(currentPage === index && tabStyles.isActiveTitleBold) ? 'bold' : 'normal', color: (currentPage === index) ? tabStyles.activeTitleColor : tabStyles.titleColor, paddingLeft:tabStyles.textPaddingLeft+'px', paddingRight:tabStyles.textPaddingRight+'px'}">{{v.title}}</text>
+            :style="{fontSize:tabStyles.fontSize + 'px', fontWight:(currentPage === index && tabStyles.isActiveTitleBold) ? 'bold' : 'normal', color: (currentPage === index) ? tabStyles.activeTitleColor : tabStyles.titleColor, paddingLeft:tabStyles.textPaddingLeft+'px', paddingRight:tabStyles.textPaddingRight+'px'}">{{v.title}}</woex-text>
       </div>
     </div>
   </div>
@@ -33,9 +34,11 @@
   import Utils from '../utils';
   import UiUtils from '../utils/ui';
   import Velocity from 'velocity-animate';
-
+  import WoexText from '../woex-text';
+  import WoexImage from '../woex-image';
 
   export default {
+    components: { WoexText, WoexImage},
     props: {
       tabTitles: {
         type: Array,
@@ -77,11 +80,7 @@
       isMoving:false
     }),
     created () {
-      const { titleType, tabTitles } = this;
-
       this.isIphoneX = Utils.env.isIPhoneX();
-
-
     },
     methods:{
       setPage(page, url = null, animated = true){
@@ -165,6 +164,10 @@
     justify-content: center;
     align-items: center;
     border-bottom-style: solid;
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*outline: none;*/
+    /*background: #fff*/
   }
   .tab-text {
     lines: 1;

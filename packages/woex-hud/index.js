@@ -39,8 +39,4 @@ const WoexHud = {
   }
 }
 
-if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(WoexHud)
-}
-
 export default WoexHud
