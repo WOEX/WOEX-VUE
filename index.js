@@ -18,7 +18,8 @@ import WoexSwitcher from './packages/woex-switcher';
 import WoexSixfield from './packages/woex-sixfield';
 import WoexSegmentbar from './packages/woex-segmentbar';
 import WoexSearchbar from './packages/woex-searchbar';
-import WoexScroller from './packages/woex-scroller'
+import WoexScroller from './packages/woex-scroller';
+import WoexAlert from './packages/woex-alert';
 
 import WoexFetch from './packages/woex-fetch';
 
@@ -45,5 +46,6 @@ export {
   WoexSixfield,
   WoexSegmentbar,
   WoexSearchbar,
-  WoexScroller
+  WoexScroller,
+  WoexAlert
 };

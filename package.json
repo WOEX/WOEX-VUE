@@ -1,6 +1,6 @@
 {
   "name": "woex-vue",
-  "version": "1.0.43",
+  "version": "1.0.45",
   "description": "th vue UI framework for wopay's UI designs.",
   "author": "Ahri <yaoyw3@chinaunicom.cn>",
   "main": "index.js",

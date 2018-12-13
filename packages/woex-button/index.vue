@@ -5,12 +5,10 @@
 </template>
 
 <script>
-  import WoexText from '../woex-text/index';
 
   import {STYLE_MAP,TEXT_STYLE_MAP,TEXT_FONTSIZE_STYLE_MAP,DISABLE_STYLE_MAP} from './type';
 
   export default {
-    components: {WoexText},
     props: {
       text:{
         type: String,
